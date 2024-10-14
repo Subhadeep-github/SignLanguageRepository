@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Profile Page</title>
+        <!-- Inline CSS -->
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            height: 100%;
+            margin: auto;
+            overflow: visible;
+        }
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between; /* Space items between left and right */
+            align-items: center;
+        }
+        .navbar .welcome-text {
+            margin-left: 10px;
+            color: #fff;
+            font-size: 18px;
+        }
+        .navbar .profile {
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin-left: auto; 
+            margin-right: 10px;/* Pushes the profile section to the far right */
+        }
+        .navbar .profile .profile-tab {
+            display: inline-block;
+            cursor: pointer;
+            color: #fff;
+            font-size: 16px;
+            position: relative;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        .navbar a:hover {
+            color: #ddd;
+        }
+        .navbar .signout-button {
+            padding: 8px 8px;
+            background-color: #e60000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .navbar .signout-button:hover {
+            background-color: #ff4d4d;
+        }
+        .menu {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .menu ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        .menu li {
+            display: inline;
+            margin: 0 10px;
+            position: relative;
+        }
+        .menu a {
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        .menu a:hover {
+            background-color: #ddd;
+        }
+        /* Dropdown Styles */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 2; /* Ensure it is above other content */
+            top: 30px; /* Adjust as needed */
+            left: 0;
+            border-radius: 5px;
+        }
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+        .dropdown-content a:hover {
+            background-color: #244d5a;
+            color: #fff;
+        }
+        .show {
+            display:block;
+        }
+        /* Hide the file input */
+        #fileInput {
+            display: none;
+        }
+    </style>
+    </head>
+    <body>
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <!-- Welcome Text -->
+            <div class="welcome-text">Sign Language Data Repository
+                {{user.username }}</div>
+
+            <!-- User Profile Section -->
+            <div class="profile">
+                <div class="profile-tab">Profile</div>
+                <div class="dropdown-content">
+                    <a href="#">Profile Name</a>
+                    <a href="#">Email</a>
+                    <a href="#">Password</a>
+                </div>
+            </div>
+
+            <!-- Signout Button -->
+            <a href="{% url 'home' %}" class="signout-button">Sign Out</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container">
+            <!-- Menu Section -->
+            <div class="menu">
+                <ul>
+                    <li>
+                        <a id="viewFoldersLink">View Folders</a>
+                        <div id="foldersDropdown" class="dropdown-content">
+                            <a href="#">Alphabets</a>
+                            <a href="#">Numbers</a>
+                            <a href="#">Words</a>
+                            <a href="#">Sentences</a>
+                        </div>
+                    </li>
+                    <li><a id="uploadLink">Upload Video</a></li>
+                    <li><a href="#">Replace Video</a></li>
+                    <li><a href="#">Download Video</a></li>
+                    <li><a href="#">Delete Video</a></li>
+                    <li><a href="#">Create Folder</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Hidden File Input -->
+        <input type="file" id="fileInput" accept="video/*">
+
+        <!-- Inline JavaScript -->
+        <script>
+        document.querySelector('.signout-button').addEventListener('click', function(event) {
+            if (!confirm('Are you sure you want to sign out?')) {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('uploadLink').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('viewFoldersLink').addEventListener('click', function() {
+            document.getElementById('foldersDropdown').classList.toggle('show');
+        });
+
+        document.querySelector('.profile-tab').addEventListener('click', function() {
+            document.querySelector('.dropdown-content').classList.toggle('show');
+        });
+
+        // Close the dropdowns if the user clicks outside of them
+        window.onclick = function(event) {
+            if (!event.target.matches('#viewFoldersLink') && !event.target.closest('#foldersDropdown') &&
+                !event.target.matches('.profile-tab') && !event.target.closest('.profile')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        };
+    </script>
+    </body>
+</html>

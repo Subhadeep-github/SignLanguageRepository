@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        .left-section {
+            padding-left: 200px;
+            flex: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .right-section {
+            padding-right: 200px;
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        h3 {
+            color: #000000;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px black;
+            font-size: 40px; /* Adjust font size as needed */
+            margin: 0;
+            text-align: left;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .button a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .button a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div class="left-section">
+            <h3>Indian Sign Language Repository</h3>
+        </div>
+        <div class="right-section">
+            <div class="button-container">
+                <!-- <button class="button"><a href='signup'>Signup</a></button> -->
+                <button class="button"><a href='signin'>Signin</a></button>
+                <!-- <button class="button"><a href='signout'>Signout</a></button> -->
+            </div>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign-In Page</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        #message {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h2>Sign-In Page</h2>
+            <form id="signinForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                    <span id="usernameError" class="error"></span>
+                </div>
+                <!-- <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+                <span id="emailError" class="error"></span>
+            </div> -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password"
+                        required>
+                    <span id="passwordError" class="error"></span>
+                </div>
+                <button type="submit">Sign In</button>
+            </form>
+            <p id="message"></p>
+        </div>
+        <script>
+        document.getElementById('signinForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            let username = document.getElementById('username').value;
+            // let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            let message = document.getElementById('message');
+            let usernameError = document.getElementById('usernameError');
+            // let emailError = document.getElementById('emailError');
+            let passwordError = document.getElementById('passwordError');
+
+            // Clear previous errors
+            usernameError.textContent = '';
+            // emailError.textContent = '';
+            passwordError.textContent = '';
+
+            // Basic validation
+            if (!username) {
+                usernameError.textContent = 'Username is required.';
+                return;
+            }
+
+            // if (!email) {
+            //     emailError.textContent = 'Email is required.';
+            //     return;
+            // }
+
+            // Basic email format validation
+            // if (!validateEmail(email)) {
+            //     emailError.textContent = 'Please enter a valid email address.';
+            //     return;
+            // }
+
+            if (!password) {
+                passwordError.textContent = 'Password is required.';
+                return;
+            }
+
+            const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+
+        // Send data to Django backend using Fetch API
+        fetch('/signin/', {  // Replace with the correct URL endpoint for sign-in
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token for security
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                message.style.color = 'green';
+                message.textContent = 'Sign-in successful!';
+                setTimeout(function () {
+                    window.location.href = 'profilepage';  // Adjust the URL to your profile page
+                }, 1000);
+            } else {
+                message.style.color = 'red';
+                message.textContent = data.error;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            message.style.color = 'red';
+            message.textContent = 'An error occurred. Please try again.';
+        });
+
+         function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+            // Simulate successful sign-in
+            message.style.color = 'green';
+            message.textContent = 'Sign-in successful!';
+            // signin()
+            // // Redirect to profile page after a short delay
+            // setTimeout(function () {
+            //     window.location.href = 'profilepage.html';
+            // }, 1000); // Delay of 1000 milliseconds (1 second)
+        });
+
+        // function validateEmail(email) {
+        //     // Basic email format validation regex
+        //     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        //     return re.test(email);
+        // }
+    </script>
+    </body>
+
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .filter-icon {
+            cursor: pointer;
+            font-size: 20px;
+            margin-left: 10px;
+            position: relative;
+        }
+
+        .filter-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            padding: 10px;
+            width: 250px;
+        }
+
+        .filter-dropdown div {
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .filter-dropdown div:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sub-dropdown {
+            padding-left: 10px;
+        }
+
+        .slider {
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Files</h1>
+        <div class="filter-section">
+            <div class="filter-icon">🔽</div>
+            <div class="filter-dropdown">
+                <div>Upload Date
+                    <div class="sub-dropdown">
+                        <label><input type="radio" name="uploadDate" value="last-15-days"> Last 15 Days</label><br>
+                        <label><input type="radio" name="uploadDate" value="last-30-days"> Last 30 Days</label><br>
+                        <label><input type="radio" name="uploadDate" value="last-45-days"> Last 45 Days</label><br>
+                        <label><input type="radio" name="uploadDate" value="last-90-days"> Last 90 Days</label><br>
+                        <label><input type="radio" name="uploadDate" value="past-6-months"> Past 6 Months</label><br>
+                    </div>
+                </div>
+                <div>Size
+                    <input type="range" class="slider" id="sizeRange" min="0" max="50" value="0" />
+                    <span id="sizeValue">0 MB</span>
+                </div>
+                <div>Uploaded By
+                    <div class="sub-dropdown">
+                        <label><input type="radio" name="uploadedBy" value="uploaded-by-asc"> A to Z</label><br>
+                        <label><input type="radio" name="uploadedBy" value="uploaded-by-desc"> Z to A</label><br>
+                    </div>
+                </div>
+                <div>Category
+                    <div class="sub-dropdown">
+                        <label><input type="radio" name="category" value="all" checked> Show All</label><br>
+                        <label><input type="radio" name="category" value="category-a"> Category A</label><br>
+                        <label><input type="radio" name="category" value="category-b"> Category B</label><br>
+                        <label><input type="radio" name="category" value="category-c"> Category C</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Date Modified</th>
+                    <th>Uploaded By</th>
+                    <th>Size (MB)</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-category="category-a">
+                    <td>Document1.pdf</td>
+                    <td>2024-09-15</td>
+                    <td>User A</td>
+                    <td>1.2</td>
+                    <td>Category A</td>
+                </tr>
+                <tr data-category="category-b">
+                    <td>Image2.png</td>
+                    <td>2024-09-10</td>
+                    <td>User B</td>
+                    <td>2.5</td>
+                    <td>Category B</td>
+                </tr>
+                <tr data-category="category-c">
+                    <td>Presentation3.pptx</td>
+                    <td>2024-09-12</td>
+                    <td>User C</td>
+                    <td>3.0</td>
+                    <td>Category C</td>
+                </tr>
+                <tr data-category="category-a">
+                    <td>Spreadsheet4.xlsx</td>
+                    <td>2024-09-08</td>
+                    <td>User A</td>
+                    <td>0.5</td>
+                    <td>Category A</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const rows = Array.from(document.querySelectorAll('table tbody tr'));
+        const filterIcon = document.querySelector('.filter-icon');
+        const filterDropdown = document.querySelector('.filter-dropdown');
+        const sizeSlider = document.getElementById('sizeRange');
+        const sizeValue = document.getElementById('sizeValue');
+
+        filterIcon.addEventListener('click', () => {
+            filterDropdown.style.display = filterDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        sizeSlider.addEventListener('input', () => {
+            sizeValue.textContent = sizeSlider.value + ' MB';
+            filterTable();
+        });
+
+        document.querySelectorAll('.filter-dropdown input[type="radio"]').forEach(option => {
+            option.addEventListener('change', () => {
+                sortTable();
+                filterTable();
+            });
+        });
+
+        function sortTable() {
+            const ascending = document.querySelector('input[name="uploadedBy"][value="uploaded-by-asc"]').checked;
+            const descending = document.querySelector('input[name="uploadedBy"][value="uploaded-by-desc"]').checked;
+
+            if (ascending) {
+                rows.sort((a, b) => a.cells[2].textContent.localeCompare(b.cells[2].textContent));
+            } else if (descending) {
+                rows.sort((a, b) => b.cells[2].textContent.localeCompare(a.cells[2].textContent));
+            }
+
+            updateTable(rows);
+        }
+
+        function filterTable() {
+            const sizeLimit = parseInt(sizeSlider.value);
+            const selectedCategory = document.querySelector('input[name="category"]:checked').value;
+
+            const filteredRows = rows.filter(row => {
+                const size = parseFloat(row.cells[3].textContent);
+                const category = row.getAttribute('data-category');
+
+                const sizeCondition = size <= sizeLimit;
+                const categoryCondition = selectedCategory === 'all' || selectedCategory === category;
+
+                return sizeCondition && categoryCondition;
+            });
+
+            updateTable(filteredRows);
+        }
+
+        function updateTable(filteredRows) {
+            const tbody = document.querySelector('table tbody');
+            tbody.innerHTML = '';
+            filteredRows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Close dropdown if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.filter-icon') && !event.target.closest('.filter-dropdown')) {
+                filterDropdown.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
